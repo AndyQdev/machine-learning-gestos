@@ -1,0 +1,7 @@
+app/dataset/
+
+# 🚫 Entornos virtuales comunes
+venv/
+env/
+
+.env

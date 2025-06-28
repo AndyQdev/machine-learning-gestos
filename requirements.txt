@@ -1,0 +1,14 @@
+fastapi
+uvicorn
+python-dotenv
+numpy
+opencv-python
+mediapipe
+torch
+scikit-learn
+fastapi
+uvicorn
+requests
+scipy
+pydantic
+pandas
