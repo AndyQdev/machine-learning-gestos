@@ -3,7 +3,8 @@
 Este proyecto permite recolectar datos desde videos de gestos en lenguaje de señas, entrenar un modelo LSTM y realizar predicción en tiempo real a través de una API con FastAPI.
 
 ---
-
+instalar dependencias:
+pip install -r requirements.txt
 ## 📁 Estructura del Proyecto
 
 python app/recolectar_holistic.py
