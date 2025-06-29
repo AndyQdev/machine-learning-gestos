@@ -1,0 +1,25 @@
+{
+  "timestamp": "Bolivia",
+  "model_name": "Bolivia",
+  "created_at": "2025-06-29T08:16:07.368496",
+  "input_size": 8820,
+  "hidden_size": 256,
+  "num_classes": 2,
+  "classes": [
+    "gracias",
+    "hola"
+  ],
+  "total_samples": 25,
+  "train_samples": 20,
+  "test_samples": 5,
+  "modelo_path": "app/modelo_nn/modelo_Bolivia\\modelo_Bolivia.pt",
+  "label_path": "app/modelo_nn/modelo_Bolivia\\label_encoder_Bolivia.txt",
+  "dataset_source": "app/data\\dataset_Bolivia_20250629_081554.csv",
+  "training_config": {
+    "epochs": 40,
+    "learning_rate": 0.001,
+    "optimizer": "Adam",
+    "loss_function": "CrossEntropyLoss",
+    "test_split": 0.2
+  }
+}
