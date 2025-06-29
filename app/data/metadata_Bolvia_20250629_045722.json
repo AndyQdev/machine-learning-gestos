@@ -1,0 +1,15 @@
+{
+  "filename": "dataset_Bolvia_20250629_045722.csv",
+  "model_name": "Bolvia",
+  "words": [
+    "hola"
+  ],
+  "config": {
+    "recordingDuration": 2,
+    "samplesPerWord": 2,
+    "totalSamples": 2
+  },
+  "created_at": "2025-06-29T04:57:22.956455",
+  "total_samples": 2,
+  "samples_per_word": 2
+}

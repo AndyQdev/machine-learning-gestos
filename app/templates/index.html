@@ -360,6 +360,17 @@
                     Estado: Listo para iniciar
                 </div>
                 
+                <!-- Selector de modelo -->
+                <div class="model-selector">
+                    <label for="modelSelect" style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Modelo a usar:</label>
+                    <select id="modelSelect" style="width: 100%; padding: 10px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 14px; background: white;">
+                        <option value="">Cargando modelos...</option>
+                    </select>
+                    <div id="modelInfo" style="margin-top: 8px; font-size: 12px; color: #666; display: none;">
+                        <span id="modelClasses"></span> | <span id="modelSamples"></span> muestras
+                    </div>
+                </div>
+                
                 <div class="progress-bar-container">
                     <div id="progressBar" class="progress-bar-fill" style="width: 0%">0%</div>
                 </div>

@@ -1,0 +1,24 @@
+{
+  "timestamp": "Bolvia",
+  "model_name": "Bolvia",
+  "created_at": "2025-06-29T04:57:27.274142",
+  "input_size": 8820,
+  "hidden_size": 256,
+  "num_classes": 1,
+  "classes": [
+    "hola"
+  ],
+  "total_samples": 2,
+  "train_samples": 1,
+  "test_samples": 1,
+  "modelo_path": "app/modelo_nn/modelo_Bolvia\\modelo_Bolvia.pt",
+  "label_path": "app/modelo_nn/modelo_Bolvia\\label_encoder_Bolvia.txt",
+  "dataset_source": "app/data\\dataset_Bolvia_20250629_045722.csv",
+  "training_config": {
+    "epochs": 40,
+    "learning_rate": 0.001,
+    "optimizer": "Adam",
+    "loss_function": "CrossEntropyLoss",
+    "test_split": 0.2
+  }
+}

@@ -11,7 +11,7 @@ import queue
 import pandas as pd
 
 class InteractiveGestureRecorder:
-    def __init__(self, output_path="data/"):
+    def __init__(self, output_path="../data/"):
         self.output_path = output_path
         self.sequence_length = 60  # 2 segundos a 30fps
         self.recording_duration = 3.0  # 3 segundos por gesto

@@ -337,8 +337,16 @@ class DatasetCreator {
         this.updateStatus('processing', 'Generando archivo del dataset...');
         
         try {
+            // Obtener el nombre del modelo
+            const modelName = document.getElementById('modelName').value.trim();
+            if (!modelName) {
+                this.updateStatus('error', 'Por favor ingresa un nombre para el modelo');
+                return;
+            }
+            
             // Preparar datos para el servidor
             const datasetData = {
+                modelName: modelName,
                 words: this.words,
                 samples: this.dataset,
                 config: {

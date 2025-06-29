@@ -1,0 +1,25 @@
+{
+  "timestamp": "Bolivia_Prueba",
+  "model_name": "Bolivia_Prueba",
+  "created_at": "2025-06-29T05:00:30.169978",
+  "input_size": 8820,
+  "hidden_size": 256,
+  "num_classes": 2,
+  "classes": [
+    "gracias",
+    "hola"
+  ],
+  "total_samples": 21,
+  "train_samples": 16,
+  "test_samples": 5,
+  "modelo_path": "app/modelo_nn/modelo_Bolivia_Prueba\\modelo_Bolivia_Prueba.pt",
+  "label_path": "app/modelo_nn/modelo_Bolivia_Prueba\\label_encoder_Bolivia_Prueba.txt",
+  "dataset_source": "app/data\\dataset_Bolivia_Prueba_20250629_050024.csv",
+  "training_config": {
+    "epochs": 40,
+    "learning_rate": 0.001,
+    "optimizer": "Adam",
+    "loss_function": "CrossEntropyLoss",
+    "test_split": 0.2
+  }
+}

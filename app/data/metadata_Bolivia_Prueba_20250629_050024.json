@@ -1,0 +1,16 @@
+{
+  "filename": "dataset_Bolivia_Prueba_20250629_050024.csv",
+  "model_name": "Bolivia_Prueba",
+  "words": [
+    "hola",
+    "gracias"
+  ],
+  "config": {
+    "recordingDuration": 2,
+    "samplesPerWord": 10,
+    "totalSamples": 21
+  },
+  "created_at": "2025-06-29T05:00:25.307030",
+  "total_samples": 21,
+  "samples_per_word": 10
+}

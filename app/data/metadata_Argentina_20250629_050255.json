@@ -1,0 +1,16 @@
+{
+  "filename": "dataset_Argentina_20250629_050255.csv",
+  "model_name": "Argentina",
+  "words": [
+    "yo",
+    "tu"
+  ],
+  "config": {
+    "recordingDuration": 2,
+    "samplesPerWord": 10,
+    "totalSamples": 24
+  },
+  "created_at": "2025-06-29T05:02:55.812651",
+  "total_samples": 24,
+  "samples_per_word": 10
+}

@@ -1,0 +1,15 @@
+{
+  "filename": "dataset_Chile_20250629_045802.csv",
+  "model_name": "Chile",
+  "words": [
+    "hola"
+  ],
+  "config": {
+    "recordingDuration": 2,
+    "samplesPerWord": 2,
+    "totalSamples": 3
+  },
+  "created_at": "2025-06-29T04:58:02.771947",
+  "total_samples": 3,
+  "samples_per_word": 2
+}

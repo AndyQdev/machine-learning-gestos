@@ -1,0 +1,24 @@
+{
+  "timestamp": "Chile",
+  "model_name": "Chile",
+  "created_at": "2025-06-29T04:58:07.655702",
+  "input_size": 8820,
+  "hidden_size": 256,
+  "num_classes": 1,
+  "classes": [
+    "hola"
+  ],
+  "total_samples": 3,
+  "train_samples": 2,
+  "test_samples": 1,
+  "modelo_path": "app/modelo_nn/modelo_Chile\\modelo_Chile.pt",
+  "label_path": "app/modelo_nn/modelo_Chile\\label_encoder_Chile.txt",
+  "dataset_source": "app/data\\dataset_Chile_20250629_045802.csv",
+  "training_config": {
+    "epochs": 40,
+    "learning_rate": 0.001,
+    "optimizer": "Adam",
+    "loss_function": "CrossEntropyLoss",
+    "test_split": 0.2
+  }
+}

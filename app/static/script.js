@@ -38,13 +38,23 @@ class GestureRecognition {
         this.confirmationIndicator = document.getElementById('confirmationIndicator');
         this.confirmationCount = document.getElementById('confirmationCount');
         
+        // Elementos del selector de modelo
+        this.modelSelect = document.getElementById('modelSelect');
+        this.modelInfo = document.getElementById('modelInfo');
+        this.modelClasses = document.getElementById('modelClasses');
+        this.modelSamples = document.getElementById('modelSamples');
+        
         this.initializeEventListeners();
+        this.loadModels(); // Cargar modelos al inicializar
     }
     
     initializeEventListeners() {
         this.startBtn.addEventListener('click', () => this.startCamera());
         this.stopBtn.addEventListener('click', () => this.stopCamera());
         this.captureBtn.addEventListener('click', () => this.manualCapture());
+        
+        // Agregar listener para el selector de modelo
+        this.modelSelect.addEventListener('change', () => this.onModelChange());
     }
     
     async startCamera() {
@@ -280,6 +290,72 @@ class GestureRecognition {
                 this.confirmationIndicator.style.display = 'none';
                 this.resetPredictionTracking();
             }, 2000);
+        }
+    }
+    
+    async loadModels() {
+        try {
+            const response = await fetch('/listar-modelos');
+            const data = await response.json();
+            
+            this.modelSelect.innerHTML = '<option value="">Seleccionar modelo...</option>';
+            
+            if (data.modelos && data.modelos.length > 0) {
+                data.modelos.forEach(modelo => {
+                    const option = document.createElement('option');
+                    option.value = modelo.timestamp;
+                    option.textContent = `${modelo.model_name} (${modelo.classes.join(', ')})`;
+                    this.modelSelect.appendChild(option);
+                });
+                
+                // Seleccionar el primer modelo por defecto
+                if (data.modelos.length > 0) {
+                    this.modelSelect.value = data.modelos[0].timestamp;
+                    this.onModelChange();
+                }
+            } else {
+                this.modelSelect.innerHTML = '<option value="">No hay modelos disponibles</option>';
+                this.updateStatus('No hay modelos entrenados disponibles', 'error');
+            }
+        } catch (error) {
+            console.error('Error cargando modelos:', error);
+            this.modelSelect.innerHTML = '<option value="">Error cargando modelos</option>';
+            this.updateStatus('Error cargando modelos', 'error');
+        }
+    }
+    
+    async onModelChange() {
+        const selectedTimestamp = this.modelSelect.value;
+        
+        if (!selectedTimestamp) {
+            this.modelInfo.style.display = 'none';
+            this.updateStatus('No hay modelo seleccionado', 'error');
+            return;
+        }
+        
+        try {
+            const response = await fetch('/seleccionar-modelo', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ timestamp: selectedTimestamp })
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                // Mostrar información del modelo
+                this.modelClasses.textContent = data.modelo.classes.join(', ');
+                this.modelSamples.textContent = data.modelo.total_samples;
+                this.modelInfo.style.display = 'block';
+                
+                this.updateStatus(`Modelo "${data.modelo.model_name || selectedTimestamp}" cargado - ${data.modelo.classes.join(', ')}`, 'ready');
+            } else {
+                this.updateStatus('Error cargando modelo: ' + data.detail, 'error');
+            }
+        } catch (error) {
+            this.updateStatus('Error seleccionando modelo: ' + error.message, 'error');
         }
     }
 }

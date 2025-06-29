@@ -1,0 +1,25 @@
+{
+  "timestamp": "Argentina",
+  "model_name": "Argentina",
+  "created_at": "2025-06-29T05:03:00.340257",
+  "input_size": 8820,
+  "hidden_size": 256,
+  "num_classes": 2,
+  "classes": [
+    "tu",
+    "yo"
+  ],
+  "total_samples": 24,
+  "train_samples": 19,
+  "test_samples": 5,
+  "modelo_path": "app/modelo_nn/modelo_Argentina\\modelo_Argentina.pt",
+  "label_path": "app/modelo_nn/modelo_Argentina\\label_encoder_Argentina.txt",
+  "dataset_source": "app/data\\dataset_Argentina_20250629_050255.csv",
+  "training_config": {
+    "epochs": 40,
+    "learning_rate": 0.001,
+    "optimizer": "Adam",
+    "loss_function": "CrossEntropyLoss",
+    "test_split": 0.2
+  }
+}

@@ -427,6 +427,14 @@
                     <div class="config-title">⚙️ Configuración General</div>
                     
                     <div class="form-group">
+                        <label class="form-label">Nombre del modelo:</label>
+                        <input type="text" id="modelName" class="form-input" placeholder="Ej: Modelo_Basico, Gestos_Espanol, etc." value="Modelo_Basico">
+                        <div style="font-size: 0.8rem; color: #666; margin-top: 5px;">
+                            Este nombre se usará para crear la carpeta del modelo entrenado
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
                         <label class="form-label">Duración de grabación (segundos):</label>
                         <input type="number" id="recordingDuration" class="form-input" value="3" min="1" max="10">
                     </div>
