@@ -7,10 +7,13 @@ instalar dependencias:
 pip install -r requirements.txt
 ## 📁 Estructura del Proyecto
 
-python app/recolectar_holistic.py
+para entrenar:
+python interactive_dataset_creator.py
+
 python app/entrenar_nn_holistic.py
 
+y luego correr
 uvicorn app.main_nn_holistic:app --reload --port 8000
 
-en otra terminal:
+en otra terminal para probar gestos:
 python app/probar_webcam_holistic.py
