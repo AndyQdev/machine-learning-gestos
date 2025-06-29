@@ -134,6 +134,11 @@ async def home(request: Request):
 async def reconocimiento(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
+# 📚 Página de aprendizaje de gestos
+@app.get("/aprendizaje", response_class=HTMLResponse)
+async def aprendizaje(request: Request):
+    return templates.TemplateResponse("aprendizaje.html", {"request": request})
+
 # 📝 Página de creación de dataset
 @app.get("/crear-dataset", response_class=HTMLResponse)
 async def crear_dataset(request: Request):
@@ -473,6 +478,30 @@ async def seleccionar_modelo(request: SelectModelRequest):
         
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error seleccionando modelo: {str(e)}")
+
+# 🎯 Endpoint para obtener palabras de un modelo
+@app.post("/obtener-palabras-modelo")
+async def obtener_palabras_modelo(request: SelectModelRequest):
+    """Obtiene las palabras disponibles en un modelo específico"""
+    try:
+        modelo_dir_path = os.path.join(modelo_dir, f"modelo_{request.timestamp}")
+        info_path = os.path.join(modelo_dir_path, f"info_{request.timestamp}.json")
+        
+        if not os.path.exists(info_path):
+            raise HTTPException(status_code=404, detail="Modelo no encontrado")
+        
+        with open(info_path, 'r', encoding='utf-8') as f:
+            info = json.load(f)
+        
+        return {
+            "success": True,
+            "words": info["classes"],
+            "model_name": info.get("model_name", request.timestamp),
+            "total_samples": info["total_samples"]
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error obteniendo palabras del modelo: {str(e)}")
 
 # 🚀 Cargar modelo al iniciar
 cargar_modelo_default()

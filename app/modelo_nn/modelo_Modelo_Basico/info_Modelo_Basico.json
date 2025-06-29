@@ -1,0 +1,27 @@
+{
+  "timestamp": "Modelo_Basico",
+  "model_name": "Modelo_Basico",
+  "created_at": "2025-06-29T06:31:04.378961",
+  "input_size": 8820,
+  "hidden_size": 256,
+  "num_classes": 4,
+  "classes": [
+    "gracia",
+    "hola",
+    "ninguno",
+    "yo"
+  ],
+  "total_samples": 50,
+  "train_samples": 40,
+  "test_samples": 10,
+  "modelo_path": "app/modelo_nn/modelo_Modelo_Basico\\modelo_Modelo_Basico.pt",
+  "label_path": "app/modelo_nn/modelo_Modelo_Basico\\label_encoder_Modelo_Basico.txt",
+  "dataset_source": "app/data\\dataset_Modelo_Basico_20250629_063059.csv",
+  "training_config": {
+    "epochs": 40,
+    "learning_rate": 0.001,
+    "optimizer": "Adam",
+    "loss_function": "CrossEntropyLoss",
+    "test_split": 0.2
+  }
+}

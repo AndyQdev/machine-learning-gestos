@@ -1,0 +1,22 @@
+{
+  "filename": "dataset_Modelo_Basico_20250629_063059.csv",
+  "model_name": "Modelo_Basico",
+  "words": [
+    "hola",
+    "ninguno",
+    "gracia",
+    "yo"
+  ],
+  "config": {
+    "recordingDuration": 2,
+    "samplesPerWord": 10,
+    "sequenceFrames": 60,
+    "totalSamples": 50
+  },
+  "created_at": "2025-06-29T06:31:00.109861",
+  "total_samples": 50,
+  "samples_per_word": 10,
+  "sequence_frames": 60,
+  "features_per_frame": 147,
+  "total_features": 8820
+}

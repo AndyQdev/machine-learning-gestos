@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📚 Aprendizaje de Gestos - Sistema Interactivo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-image: linear-gradient(to right top, #d16ba5, #c777b9, #ba83ca, #aa8fd8, #9a9ae1, #8aa7ec, #79b3f4, #69bff8, #52cffe, #41dfff, #46eefa, #5ffbf1);
+            background-size: cover;
+            background-attachment: fixed;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .nav-btn {
+            padding: 10px 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            text-decoration: none;
+            color: #4a5568;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            background: white;
+        }
+        
+        .nav-btn:hover {
+            border-color: #667eea;
+            color: #667eea;
+            transform: translateY(-2px);
+        }
+        
+        .nav-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: #667eea;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            color: #666;
+            margin: 0;
+        }
+        
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        
+        /* Panel de configuración (arriba, todo el ancho) */
+        .config-panel-full {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .config-sections-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+        }
+        
+        .config-section {
+            margin-bottom: 25px;
+        }
+        
+        .config-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-label {
+            display: block;
+            font-weight: 500;
+            color: #4a5568;
+            margin-bottom: 5px;
+        }
+        
+        .form-input, .form-select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .word-selector {
+            margin-bottom: 20px;
+        }
+        
+        .word-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .word-btn {
+            padding: 10px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-weight: 500;
+        }
+        
+        .word-btn:hover {
+            border-color: #667eea;
+            color: #667eea;
+        }
+        
+        .word-btn.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+        
+        .model-info {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .model-info h4 {
+            margin: 0 0 10px 0;
+            color: #2d3748;
+        }
+        
+        .model-info p {
+            margin: 5px 0;
+            color: #4a5568;
+        }
+        
+        /* Panel de videos (abajo, lado a lado) */
+        .videos-panel {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        .avatar-section, .webcam-section {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .avatar-section {
+            min-height: 400px;
+        }
+        
+        .webcam-section {
+            min-height: 500px;
+        }
+        
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        /* Área de mensajes fija */
+        .messages-area {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 15px;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .message-placeholder {
+            color: #718096;
+            font-style: italic;
+            text-align: center;
+        }
+        
+        .message-success {
+            color: #065f46;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        .message-error {
+            color: #991b1b;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        .message-processing {
+            color: #1e40af;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        .messages-area button {
+            margin-top: 10px;
+            padding: 8px 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .messages-area button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
+        }
+        
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+        
+        .button-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .button-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        
+        .button-success {
+            background: linear-gradient(135deg, #10B981 0%, #34D399 100%);
+            color: white;
+        }
+        
+        .button-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+        }
+        
+        .button-danger {
+            background: linear-gradient(135deg, #EF4444 0%, #F87171 100%);
+            color: white;
+        }
+        
+        .button-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+        }
+        
+        .button-warning {
+            background: linear-gradient(135deg, #F59E0B 0%, #FBBF24 100%);
+            color: white;
+        }
+        
+        .button-warning:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+        }
+        
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+        
+        .status {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+        
+        .status.ready {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+        
+        .status.error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+        
+        .status.processing {
+            background: #dbeafe;
+            color: #1e40af;
+            border: 1px solid #bfdbfe;
+        }
+        
+        .status.recording {
+            background: #fef3c7;
+            color: #92400e;
+            border: 1px solid #fde68a;
+        }
+        
+        .status.success {
+            background: #dcfce7;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+        
+        .progress-section {
+            margin-bottom: 20px;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #e2e8f0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #10B981, #34D399);
+            transition: width 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .feedback-display {
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            display: none;
+        }
+        
+        .feedback-success {
+            background: linear-gradient(135deg, #10B981, #34D399);
+            color: white;
+        }
+        
+        .feedback-error {
+            background: linear-gradient(135deg, #EF4444, #F87171);
+            color: white;
+        }
+        
+        .feedback-display button {
+            margin-top: 15px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .feedback-display button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+        }
+        
+        .confirmation-indicator {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid #e2e8f0;
+            background: white;
+            transition: all 0.3s ease;
+        }
+        
+        .confirmation-indicator.active {
+            background: #10B981;
+            border-color: #10B981;
+            transform: scale(1.2);
+        }
+        
+        .confirmation-indicator.completed {
+            background: #10B981;
+            border-color: #10B981;
+            animation: pulse 0.6s ease-in-out;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+            100% { transform: scale(1); }
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #4f46e5;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+        
+        .no-video-animation {
+            text-align: center;
+            color: #718096;
+            animation: bounce 2s infinite;
+        }
+        
+        .sad-face {
+            font-size: 4rem;
+            margin-bottom: 10px;
+            animation: shake 1s infinite;
+        }
+        
+        .no-video-animation p {
+            margin: 0;
+            font-size: 1rem;
+            color: #4a5568;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+        
+        @keyframes shake {
+            0%, 100% {
+                transform: translateX(0);
+            }
+            25% {
+                transform: translateX(-5px);
+            }
+            75% {
+                transform: translateX(5px);
+            }
+        }
+        
+        @media (max-width: 1200px) {
+            .config-sections-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .config-sections-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .videos-panel {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            button {
+                width: 100%;
+                max-width: 200px;
+            }
+            
+            .avatar-section, .webcam-section {
+                padding: 20px;
+                min-height: auto;
+            }
+            
+            /* Modal responsive */
+            .modal-content {
+                width: 95%;
+                padding: 30px 20px;
+                margin: 20px;
+            }
+            
+            .modal-header h2 {
+                font-size: 1.5rem;
+            }
+            
+            .success-icon {
+                font-size: 4rem;
+            }
+            
+            .modal-body p {
+                font-size: 1.1rem;
+            }
+            
+            .continue-learning-btn {
+                padding: 12px 24px;
+                font-size: 1rem;
+            }
+        }
+        
+        .video-container {
+            position: relative;
+            width: 100%;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        #videoElement {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        .avatar-container {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            background: #f8fafc;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px dashed #cbd5e0;
+            overflow: hidden;
+        }
+        
+        .avatar-container video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        
+        .avatar-placeholder {
+            text-align: center;
+            color: #718096;
+        }
+        
+        .avatar-placeholder h3 {
+            margin-bottom: 10px;
+            color: #4a5568;
+        }
+        
+        /* Mensaje de éxito fijo abajo */
+        .success-message-container {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            width: 90%;
+            max-width: 600px;
+        }
+        
+        .success-message {
+            background: linear-gradient(135deg, #10B981, #34D399);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
+            animation: slideUp 0.5s ease-out;
+        }
+        
+        .success-message span {
+            display: block;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .continue-button {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+        
+        .continue-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+        }
+        
+        @keyframes slideUp {
+            from {
+                transform: translateX(-50%) translateY(100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(-50%) translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        /* Modal de éxito */
+        .success-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1000;
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+        }
+        
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            padding: 40px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: slideIn 0.4s ease-out;
+        }
+        
+        .modal-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .success-icon {
+            font-size: 5rem;
+            margin-bottom: 15px;
+            animation: bounce 1s infinite;
+        }
+        
+        .modal-header h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin: 0;
+            background: linear-gradient(135deg, #10B981 0%, #34D399 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .modal-body {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .modal-body p {
+            font-size: 1.2rem;
+            color: #4a5568;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+        
+        .celebration-animation {
+            margin: 20px 0;
+        }
+        
+        .confetti {
+            display: inline-block;
+            margin: 0 8px;
+            font-size: 2.5rem;
+            animation: confettiFall 2s ease-in-out infinite;
+        }
+        
+        .confetti:nth-child(1) { animation-delay: 0s; }
+        .confetti:nth-child(2) { animation-delay: 0.5s; }
+        .confetti:nth-child(3) { animation-delay: 1s; }
+        .confetti:nth-child(4) { animation-delay: 1.5s; }
+        
+        .modal-footer {
+            text-align: center;
+        }
+        
+        .continue-learning-btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .continue-learning-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translate(-50%, -60%);
+                opacity: 0;
+            }
+            to {
+                transform: translate(-50%, -50%);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+        
+        @keyframes confettiFall {
+            0% {
+                transform: translateY(-20px) rotate(0deg);
+                opacity: 1;
+            }
+            50% {
+                transform: translateY(10px) rotate(180deg);
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(20px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Navegación -->
+        <div class="navigation">
+            <a href="/" class="nav-btn">🏠 Inicio</a>
+            <a href="/reconocimiento" class="nav-btn">🎥 Reconocimiento</a>
+            <a href="/aprendizaje" class="nav-btn active">📚 Aprendizaje</a>
+            <a href="/crear-dataset" class="nav-btn">📝 Crear Dataset</a>
+        </div>
+        
+        <div class="header">
+            <h1>📚 Aprendizaje de Gestos</h1>
+            <p>Sistema interactivo con avatar instructor para aprender lenguaje de señas</p>
+        </div>
+        
+        <div class="main-content">
+            <!-- Panel de configuración (arriba, todo el ancho) -->
+            <div class="config-panel-full">
+                <div class="config-sections-grid">
+                    <div class="config-section">
+                        <div class="config-title">🤖 Seleccionar Modelo</div>
+                        <div class="form-group">
+                            <select id="modelSelect" class="form-select">
+                                <option value="">Cargando modelos...</option>
+                            </select>
+                        </div>
+                        <div class="model-info" id="modelInfo">
+                            <h4>Información del Modelo</h4>
+                            <p><strong>Clases:</strong> <span id="modelClasses">-</span></p>
+                            <p><strong>Muestras:</strong> <span id="modelSamples">-</span></p>
+                        </div>
+                    </div>
+                    
+                    <div class="config-section">
+                        <div class="config-title">📚 Seleccionar Palabra para Aprender</div>
+                        <div class="word-selector">
+                            <div class="word-grid" id="wordGrid">
+                                <!-- Las palabras se cargarán dinámicamente -->
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="config-section">
+                        <div class="config-title">💬 Mensajes del Sistema</div>
+                        <div class="messages-area" id="messagesArea">
+                            <div class="message-placeholder">
+                                Selecciona una palabra para comenzar
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Panel de videos (abajo, lado a lado) -->
+            <div class="videos-panel">
+                <!-- Avatar instructor (izquierda) -->
+                <div class="avatar-section">
+                    <div class="section-title">👤 Avatar Instructor</div>
+                    <div class="avatar-container" id="avatarContainer">
+                        <div class="avatar-placeholder">
+                            <h3>👤 Avatar Instructor</h3>
+                            <p>Selecciona una palabra para ver la demostración</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Video del usuario (derecha) -->
+                <div class="webcam-section">
+                    <div class="section-title">🎥 Tu Cámara</div>
+                    <div class="video-container">
+                        <video id="videoElement" autoplay muted></video>
+                    </div>
+                    
+                    <!-- Controles de cámara y aprendizaje juntos -->
+                    <div class="controls">
+                        <button id="startBtn" class="button-success" onclick="startCamera()">
+                            🎥 Iniciar Cámara
+                        </button>
+                        <button id="stopBtn" class="button-danger" onclick="stopCamera()" disabled>
+                            ⏹️ Detener Cámara
+                        </button>
+                        <button id="startLearningBtn" class="button-success" onclick="startLearning()">
+                            🎬 Iniciar Aprendizaje
+                        </button>
+                        <button id="stopLearningBtn" class="button-danger" onclick="stopLearning()" disabled>
+                            ⏹️ Detener
+                        </button>
+                    </div>
+                    
+                    <!-- Progreso -->
+                    <div class="progress-section">
+                        <div class="progress-bar">
+                            <div id="progressFill" class="progress-fill" style="width: 0%">0%</div>
+                        </div>
+                        <div style="text-align: center; color: #666;">
+                            Progreso: <span id="progressText">0 de 0 frames</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Confirmación -->
+                    <div class="confirmation-section" style="margin-bottom: 20px; display: none;" id="confirmationSection">
+                        <div style="text-align: center; margin-bottom: 10px;">
+                            <span style="font-weight: 600; color: #4a5568;">Confirmaciones necesarias:</span>
+                        </div>
+                        <div class="confirmation-indicators" id="confirmationIndicators" style="display: flex; justify-content: center; gap: 10px;">
+                            <!-- Los indicadores se generarán dinámicamente -->
+                        </div>
+                    </div>
+                    
+                    <!-- Estadísticas -->
+                    <div class="stats">
+                        <div class="stat-card">
+                            <div class="stat-value" id="framesCaptured">0</div>
+                            <div class="stat-label">Frames Capturados</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="predictionsMade">0</div>
+                            <div class="stat-label">Predicciones</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="currentFPS">0</div>
+                            <div class="stat-label">FPS Actual</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="confidence">0%</div>
+                            <div class="stat-label">Confianza</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Modal de éxito -->
+        <div class="success-modal" id="successModal">
+            <div class="modal-overlay" id="modalOverlay"></div>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="success-icon">🎉</div>
+                    <h2>¡Excelente Trabajo!</h2>
+                </div>
+                <div class="modal-body">
+                    <p id="modalMessage">Has dominado el gesto correctamente</p>
+                    <div class="celebration-animation">
+                        <div class="confetti">🎊</div>
+                        <div class="confetti">✨</div>
+                        <div class="confetti">🎊</div>
+                        <div class="confetti">✨</div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="continueLearningBtn" class="continue-learning-btn">
+                        🎯 Aprender otra palabra
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/aprendizaje.js"></script>
+</body>
+</html> 
