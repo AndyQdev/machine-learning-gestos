@@ -104,6 +104,7 @@ class Entrada(BaseModel):
 class DatasetConfig(BaseModel):
     recordingDuration: int
     samplesPerWord: int
+    sequenceFrames: int
     totalSamples: int
 
 class DatasetSample(BaseModel):
@@ -162,17 +163,13 @@ def predecir(data: Entrada):
 # 📊 Endpoint para generar dataset
 @app.post("/generar-dataset")
 async def generar_dataset(data: DatasetRequest):
-    print(f"🔍Datos recibidos:")
-    print(f"   modelName: {data.modelName}")
-    print(f"   words: {data.words}")
-    print(f"   samples count: {len(data.samples)}")
-    print(f"   config: {data.config}")
     try:
-        print(f"   Datos recibidos:")
+        print(f"🔍 Datos recibidos:")
         print(f"   modelName: {data.modelName}")
         print(f"   words: {data.words}")
         print(f"   samples count: {len(data.samples)}")
         print(f"   config: {data.config}")
+        print(f"   sequenceFrames: {data.config.sequenceFrames}")
         
         # Crear directorio de datos si no existe (en app/data desde la raíz)
         os.makedirs("app/data", exist_ok=True)
@@ -204,7 +201,10 @@ async def generar_dataset(data: DatasetRequest):
             "config": data.config.dict(),
             "created_at": datetime.now().isoformat(),
             "total_samples": len(data.samples),
-            "samples_per_word": data.config.samplesPerWord
+            "samples_per_word": data.config.samplesPerWord,
+            "sequence_frames": data.config.sequenceFrames,
+            "features_per_frame": 147,
+            "total_features": data.config.sequenceFrames * 147
         }
         
         metadata_path = os.path.join("app/data", f"metadata_{model_name_clean}_{timestamp}.json")
@@ -213,6 +213,7 @@ async def generar_dataset(data: DatasetRequest):
         
         # 🚀 Entrenar modelo automáticamente
         print(f"📊 Dataset guardado en: {filepath}")
+        print(f"📊 Configuración: {data.config.sequenceFrames} frames × 147 features = {data.config.sequenceFrames * 147} features totales")
         print(f"🚀 Iniciando entrenamiento automático...")
         training_result = await entrenar_modelo_automatico(filepath, model_name_clean)
         print(f"📊 Resultado del entrenamiento: {training_result}")
@@ -223,7 +224,8 @@ async def generar_dataset(data: DatasetRequest):
             "model_name": data.modelName,
             "total_samples": len(data.samples),
             "words": data.words,
-            "message": f"Dataset generado con {len(data.samples)} muestras",
+            "sequence_frames": data.config.sequenceFrames,
+            "message": f"Dataset generado con {len(data.samples)} muestras de {data.config.sequenceFrames} frames cada una",
             "training": training_result
         }
         

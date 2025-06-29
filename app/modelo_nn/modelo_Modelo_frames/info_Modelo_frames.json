@@ -1,0 +1,27 @@
+{
+  "timestamp": "Modelo_frames",
+  "model_name": "Modelo_frames",
+  "created_at": "2025-06-29T05:22:39.366091",
+  "input_size": 8820,
+  "hidden_size": 256,
+  "num_classes": 4,
+  "classes": [
+    "gracias",
+    "hola",
+    "tu",
+    "yo"
+  ],
+  "total_samples": 45,
+  "train_samples": 36,
+  "test_samples": 9,
+  "modelo_path": "app/modelo_nn/modelo_Modelo_frames\\modelo_Modelo_frames.pt",
+  "label_path": "app/modelo_nn/modelo_Modelo_frames\\label_encoder_Modelo_frames.txt",
+  "dataset_source": "app/data\\dataset_Modelo_frames_20250629_052232.csv",
+  "training_config": {
+    "epochs": 40,
+    "learning_rate": 0.001,
+    "optimizer": "Adam",
+    "loss_function": "CrossEntropyLoss",
+    "test_split": 0.2
+  }
+}

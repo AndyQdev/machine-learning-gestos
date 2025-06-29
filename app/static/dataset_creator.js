@@ -1,4 +1,4 @@
-// Creador de Dataset Interactivo - Versión Fluida
+// Creador de Dataset Interactivo
 class DatasetCreator {
     constructor() {
         this.video = document.getElementById('videoElement');
@@ -7,8 +7,9 @@ class DatasetCreator {
         this.words = [];
         this.currentWordIndex = 0;
         this.currentSampleIndex = 0;
-        this.recordingDuration = 3;
+        this.recordingDuration = 2;
         this.samplesPerWord = 10;
+        this.sequenceFrames = 60; // Nuevo: frames por secuencia
         this.dataset = [];
         this.recordingInterval = null;
         this.countdownInterval = null;
@@ -128,14 +129,20 @@ class DatasetCreator {
         
         this.recordingDuration = parseInt(document.getElementById('recordingDuration').value);
         this.samplesPerWord = parseInt(document.getElementById('samplesPerWord').value);
+        this.sequenceFrames = parseInt(document.getElementById('sequenceFrames').value); // Nuevo
         
-        if (this.recordingDuration < 1 || this.recordingDuration > 10) {
-            this.updateStatus('error', 'La duración debe estar entre 1 y 10 segundos');
+        if (this.recordingDuration < 1 || this.recordingDuration > 5) {
+            this.updateStatus('error', 'La duración debe estar entre 1 y 5 segundos');
             return;
         }
         
         if (this.samplesPerWord < 1 || this.samplesPerWord > 50) {
             this.updateStatus('error', 'Las muestras por palabra deben estar entre 1 y 50');
+            return;
+        }
+        
+        if (this.sequenceFrames < 30 || this.sequenceFrames > 120) {
+            this.updateStatus('error', 'Los frames deben estar entre 30 y 120');
             return;
         }
         
@@ -163,7 +170,7 @@ class DatasetCreator {
             this.updateCurrentWord();
             this.updateProgress();
             this.updateStats();
-            this.updateStatus('ready', 'Cámara iniciada. Presiona ENTER o ESPACIO para grabar');
+            this.updateStatus('ready', `Cámara iniciada. Configurado para ${this.sequenceFrames} frames. Presiona ENTER o ESPACIO para grabar`);
             
         } catch (error) {
             this.updateStatus('error', 'Error al acceder a la cámara: ' + error.message);
@@ -217,8 +224,7 @@ class DatasetCreator {
             }
         }, 100);
         
-        // Simular grabación de landmarks (en una implementación real, usarías MediaPipe localmente)
-        // Por ahora, generamos datos simulados para mantener la funcionalidad
+        // Simular grabación de landmarks con la nueva configuración de frames
         this.simulateLandmarksRecording();
         
         // Esperar la duración especificada
@@ -227,7 +233,7 @@ class DatasetCreator {
     
     simulateLandmarksRecording() {
         // Simular grabación de landmarks durante la duración especificada
-        const frameInterval = 1000 / 30; // 30 FPS
+        const frameInterval = 1000 / 30; // 30 FPS de grabación
         const totalFrames = Math.floor(this.recordingDuration * 1000 / frameInterval);
         
         for (let i = 0; i < totalFrames; i++) {
@@ -257,8 +263,8 @@ class DatasetCreator {
         
         // Procesar secuencia de landmarks
         if (this.landmarksSequence.length > 0) {
-            // Normalizar secuencia a 60 frames
-            const normalizedSequence = this.normalizeSequence(this.landmarksSequence);
+            // Normalizar secuencia al número de frames configurado
+            const normalizedSequence = this.normalizeSequence(this.landmarksSequence, this.sequenceFrames);
             
             // Agregar muestra al dataset
             const sample = {
@@ -291,9 +297,8 @@ class DatasetCreator {
         }
     }
     
-    normalizeSequence(sequence) {
-        // Normalizar secuencia a 60 frames
-        const targetFrames = 60;
+    normalizeSequence(sequence, targetFrames) {
+        // Normalizar secuencia al número de frames configurado
         const normalized = [];
         
         if (sequence.length === 0) {
@@ -352,6 +357,7 @@ class DatasetCreator {
                 config: {
                     recordingDuration: this.recordingDuration,
                     samplesPerWord: this.samplesPerWord,
+                    sequenceFrames: this.sequenceFrames, // Nuevo
                     totalSamples: this.dataset.length
                 }
             };

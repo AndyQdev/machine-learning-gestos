@@ -436,7 +436,20 @@
                     
                     <div class="form-group">
                         <label class="form-label">Duración de grabación (segundos):</label>
-                        <input type="number" id="recordingDuration" class="form-input" value="3" min="1" max="10">
+                        <input type="number" id="recordingDuration" class="form-input" value="2" min="1" max="5">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Frames por secuencia:</label>
+                        <select id="sequenceFrames" class="form-input">
+                            <option value="30">30 frames (15 FPS)</option>
+                            <option value="60" selected>60 frames (30 FPS)</option>
+                            <option value="90">90 frames (45 FPS)</option>
+                            <option value="120">120 frames (60 FPS)</option>
+                        </select>
+                        <div style="font-size: 0.8rem; color: #666; margin-top: 5px;">
+                            Más frames = mejor precisión, pero requiere más procesamiento
+                        </div>
                     </div>
                     
                     <div class="form-group">
