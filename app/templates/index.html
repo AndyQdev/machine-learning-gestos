@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧠 Reconocimiento de Gestos en Tiempo Real</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom CSS for a better look and feel */
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-image: linear-gradient(to right top, #d16ba5, #c777b9, #ba83ca, #aa8fd8, #9a9ae1, #8aa7ec, #79b3f4, #69bff8, #52cffe, #41dfff, #46eefa, #5ffbf1);
+            background-size: cover;
+            background-attachment: fixed;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .nav-btn {
+            padding: 10px 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            text-decoration: none;
+            color: #4a5568;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            background: white;
+        }
+        
+        .nav-btn:hover {
+            border-color: #667eea;
+            color: #667eea;
+            transform: translateY(-2px);
+        }
+        
+        .nav-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: #667eea;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            color: #666;
+            margin: 0;
+        }
+        
+        /* Layout de dos columnas */
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            align-items: start;
+        }
+        
+        /* Columna izquierda - Cámara */
+        .camera-column {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .video-container {
+            position: relative;
+            width: 100%;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        
+        #videoElement, #canvasOutput {
+            width: 100%;
+            height: auto;
+            border-radius: 0.75rem;
+            display: block;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        /* Columna derecha - Estadísticas y resultados */
+        .stats-column {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .status {
+            text-align: center;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+        
+        .status.ready {
+            background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+            color: #065f46;
+        }
+        
+        .status.processing {
+            background: linear-gradient(135deg, #bfdbfe, #93c5fd);
+            color: #1e40af;
+        }
+        
+        .status.error {
+            background: linear-gradient(135deg, #fecaca, #fca5a5);
+            color: #991b1b;
+        }
+        
+        .progress-bar-container {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: 0.5rem;
+            overflow: hidden;
+        }
+        
+        .progress-bar-fill {
+            height: 1.5rem;
+            background-color: #4CAF50;
+            text-align: center;
+            color: white;
+            line-height: 1.5rem;
+            transition: width 0.5s ease-in-out;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        .confirmation-indicator {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .confirmation-text {
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 10px;
+        }
+        
+        .confirmation-progress {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .confirmation-dots {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #e5e7eb;
+            transition: all 0.3s ease;
+        }
+        
+        .dot.active {
+            background-color: #10b981;
+            transform: scale(1.2);
+        }
+        
+        .confirmation-count {
+            font-weight: 600;
+            color: #374151;
+            font-size: 0.9rem;
+        }
+        
+        .prediction-display {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            border-radius: 15px;
+            border: 2px solid #f59e0b;
+        }
+        
+        .prediction-text {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #92400e;
+            margin: 0;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #4f46e5;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+        
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 1rem;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            transform: translateY(0);
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        
+        button:active {
+            transform: translateY(1px);
+        }
+        
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .button-primary { background-image: linear-gradient(to right, #4F46E5, #6366F1); }
+        .button-primary:hover { background-image: linear-gradient(to right, #4338CA, #4F46E5); }
+        .button-success { background-image: linear-gradient(to right, #10B981, #34D399); }
+        .button-success:hover { background-image: linear-gradient(to right, #059669, #10B981); }
+        .button-warning { background-image: linear-gradient(to right, #F59E0B, #FBBF24); }
+        .button-warning:hover { background-image: linear-gradient(to right, #D97706, #F59E0B); }
+        .button-danger { background-image: linear-gradient(to right, #EF4444, #F87171); }
+        .button-danger:hover { background-image: linear-gradient(to right, #DC2626, #EF4444); }
+        
+        /* Responsive design */
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .stats {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            button {
+                width: 100%;
+                max-width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Navegación -->
+        <div class="navigation">
+            <a href="/" class="nav-btn">🏠 Inicio</a>
+            <a href="/reconocimiento" class="nav-btn active">🎥 Reconocimiento</a>
+            <a href="/crear-dataset" class="nav-btn">📝 Crear Dataset</a>
+        </div>
+        
+        <div class="header">
+            <h1>🧠 Reconocimiento de Gestos</h1>
+            <p>Interfaz web para reconocimiento de lenguaje de señas en tiempo real</p>
+        </div>
+        
+        <div class="main-content">
+            <!-- Columna izquierda - Cámara -->
+            <div class="camera-column">
+                <div class="video-container">
+                    <video id="videoElement" autoplay muted></video>
+                    <canvas id="canvasOutput" style="display: none;"></canvas>
+                </div>
+                
+                <div class="controls">
+                    <button id="startBtn" class="button-success">🎥 Iniciar Cámara</button>
+                    <button id="stopBtn" class="button-danger" disabled>⏹️ Detener</button>
+                    <button id="captureBtn" class="button-primary" disabled>📸 Capturar Gesto</button>
+                </div>
+            </div>
+            
+            <!-- Columna derecha - Estadísticas y resultados -->
+            <div class="stats-column">
+                <div id="status" class="status ready">
+                    Estado: Listo para iniciar
+                </div>
+                
+                <div class="progress-bar-container">
+                    <div id="progressBar" class="progress-bar-fill" style="width: 0%">0%</div>
+                </div>
+                
+                <!-- Indicador de confirmación de predicción -->
+                <div id="confirmationIndicator" class="confirmation-indicator" style="display: none;">
+                    <div class="confirmation-text">Confirmando predicción:</div>
+                    <div class="confirmation-progress">
+                        <div class="confirmation-dots">
+                            <span class="dot" id="dot1"></span>
+                            <span class="dot" id="dot2"></span>
+                        </div>
+                        <div class="confirmation-count" id="confirmationCount">0/2</div>
+                    </div>
+                </div>
+                
+                <div id="predictionDisplay" class="prediction-display" style="display: none;">
+                    <p class="prediction-text" id="predictionText">Esperando gesto...</p>
+                </div>
+                
+                <div class="stats">
+                    <div class="stat-card">
+                        <div class="stat-value" id="framesCaptured">0</div>
+                        <div class="stat-label">Frames Capturados</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="predictionsMade">0</div>
+                        <div class="stat-label">Predicciones Realizadas</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="confidence">0%</div>
+                        <div class="stat-label">Confianza</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="currentFPS">0</div>
+                        <div class="stat-label">FPS Actual</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html> 
